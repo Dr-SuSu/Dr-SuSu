@@ -44,7 +44,7 @@
                     <dl class="layui-nav-child">
                         <dd>
                             <a href="javascript:;"
-                               data-url="${request.getContextPath}/user"
+                               data-url="<%=request.getContextPath()%>/user"
                                class="site-demo-active">用户管理</a>
                         </dd>
                         <dd>
@@ -106,7 +106,7 @@
             '您确认要退出么',
             {icon:3},
             function() {
-                location.href = '${path}/user?method=logout'
+                location.href = '<%=request.getContextPath()%>/user?method=logout'
             }
         );
     }

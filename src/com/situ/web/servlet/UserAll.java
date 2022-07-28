@@ -1,5 +1,8 @@
 package com.situ.web.servlet;
 
+import com.situ.web.Dao.Impl.UserDaoImpl;
+import com.situ.web.Service.ServiceImpl.UserServiceImpl;
+import com.situ.web.Service.UserService;
 import com.situ.web.Util.JDBCUtil;
 import com.situ.web.pojo.User;
 
@@ -20,18 +23,19 @@ import java.util.List;
 
 @WebServlet("/user")
 public class UserAll extends HttpServlet {
+
+    private UserService userService = new UserServiceImpl();
+
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("UserAll.service");
         String method = req.getParameter("method");
 
         if (method != null || method.equals("")) {
-            method = "selectAll";
+            method = "selectAllUser";
         }
-
         switch (method) {
-            case "selectAll":
-                selectAll(req, resp);
+            case "selectAllUser":
+                selectAllUser(req, resp);
                 break;
             case "addUser":
                 addUser(req, resp);
@@ -39,15 +43,20 @@ public class UserAll extends HttpServlet {
             case "updateUser":
                 updateUser(req, resp);
                 break;
+            case "selectById":
+                selectById(req, resp);
+                break;
             case "deleteUser":
                 deleteUser(req, resp);
                 break;
         }
     }
 
+    private void selectById(HttpServletRequest req, HttpServletResponse resp) {
+    }
+
     private void deleteUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        System.out.println("UserAll.deleteUser");
-        String id = req.getParameter("id");
+        /*String id = req.getParameter("id");
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -60,27 +69,46 @@ public class UserAll extends HttpServlet {
             System.out.println(count);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-        }
-        resp.sendRedirect(req.getContextPath() + "/user?method=selectAll");
-    }
-
-    private void updateUser(HttpServletRequest req, HttpServletResponse resp) {
-
-    }
-
-    public void getUserData(ServletRequest req, ServletResponse res) throws ServletException, IOException {
-        System.out.println("UserAll.getUserData");
+        }*/
         String id = req.getParameter("id");
-        Connection connection = null;
+        userService.deleteUser(Integer.parseInt(id));//只需要将网页的数据封装起来传递到service。
+        resp.sendRedirect(req.getContextPath() + "/user?method=selectAllUser");
+    }
+
+    private void updateUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String id = req.getParameter("id");
+        User user = userService.selectById(Integer.parseInt(id));
+        userService.updateUser(user);
+        resp.sendRedirect(req.getContextPath() + "/user?method=selectAllUser");
     }
 
     private void addUser(HttpServletRequest req, HttpServletResponse resp) {
-
+        String name = req.getParameter("name");
+        String password = req.getParameter("password");
+        String email = req.getParameter("email");
+        String tel = req.getParameter("tel");
+        User user = new User(name, password, email, tel);
+        userService.addUser(user);
+        /*Connection connection = null;
+        PreparedStatement statement = null;
+        try {
+            connection = JDBCUtil.getConnection();
+            String sql ="insert into user (name, password, email, tel) value(?, ?, ?, ?)";
+            statement.setString(1, "name");
+            statement.setString(2, "password");
+            statement.setString(3, "email");
+            statement.setString(4, "tel");
+            int count = statement.executeUpdate();
+            System.out.println(count);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } finally {
+            JDBCUtil.close(connection, statement, null);
+        }*/
     }
 
-    private void selectAll(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("UserAll.selectAll");
-        Connection connection = null;
+    private void selectAllUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        /*Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         List<User> list = new ArrayList<User>();
@@ -97,16 +125,17 @@ public class UserAll extends HttpServlet {
                 String tel = resultSet.getString("tel");
                 User user = new User(id, username, password, email, tel);
                 list.add(user);
-            }
-            for (User user : list) {
+            }*/
+/*            for (User user : list) {
                 System.out.println(user);
-            }
-        } catch (SQLException throwables) {
+            }*/
+        /*} catch (SQLException throwables) {
             throwables.printStackTrace();
         } finally {
             JDBCUtil.close(connection, statement, resultSet);
-        }
+        }*/
+        List<User> list = userService.selectAllUser();
         req.setAttribute("list", list);
-        req.getRequestDispatcher(req.getContextPath() + "/user/selectAll").forward(req, resp);
+        req.getRequestDispatcher("user_list.jsp").forward(req, resp);
     }
 }

@@ -7,8 +7,18 @@ public class User {
     private String email;
     private String tel;
 
+    public User() {
+    }
+
     public User(int id, String username, String password, String email, String tel) {
         this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.tel = tel;
+    }
+
+    public User(String username, String password, String email, String tel) {
         this.username = username;
         this.password = password;
         this.email = email;
