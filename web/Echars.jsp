@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="">
 </head>
 <body>
+
 <script src="static/echarts.min.js"></script>
     <!-- 为 ECharts 准备一个定义了宽高的 DOM -->
     <div id="main" style="width: 600px;height:400px;"></div>

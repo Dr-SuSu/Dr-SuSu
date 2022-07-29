@@ -3,7 +3,7 @@ package com.situ.web.Util;
 import java.sql.*;
 
 public class JDBCUtil {
-    private final static String URL = "jdbc:mysql://localhost:3306/javauser";
+    private final static String URL = "jdbc:mysql://localhost:3306/java2207";
     private final static String USER = "root";
     private final static String PASSWORD = "5130550";
 

@@ -21,6 +21,8 @@ public class Ajax2Servlet extends HttpServlet {
     }
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        req.setCharacterEncoding("UTF-8");
+//        resp.setContentType("text/html;charset=UTF-8");
         String name = req.getParameter("name");
         // {'exist':true,'msg':'此用户已经存在，请更换一个'}
         // {'exist':false,'msg':'此用户可以使用'}
@@ -33,7 +35,6 @@ public class Ajax2Servlet extends HttpServlet {
             map.put("msg", "此用户可以使用");
         }
 
-        resp.setContentType("text/html;charset=utf-8");
         ObjectMapper objectMapper = new ObjectMapper();
         // objectMapper.writeValueAsString(map);
         // 把Map转换为json，同时借助response的流返回给浏览器

@@ -23,10 +23,10 @@
         区县：<select id="areaId">
                     <option>--请选择省份--</option>
              </select>
+
         <script>
             $(function(){
-
-
+                //查询所有的省份
                 $.post(
                     '<%=request.getContextPath()%>/ajax3?method=selectProvince',
                     function (jsonObj) {
@@ -41,11 +41,10 @@
                     },
                     'json'
                 );
-
-
+                //查询所在省份的所有的城市
                 $('#provinceId').change(function() {
                     var provinceId = $('#provinceId').val();
-                    $('cityId option:gt(0)').remove();//移除除第一行外的其他城市名
+                    $('#cityId option:gt(0)').remove();//移除除第一行外的其他城市名
                     $.post(
                         '<%=request.getContextPath()%>/ajax3?method=selectCity',
                         {'provinceId' : provinceId},
@@ -58,8 +57,26 @@
                         'json'
                     );
                 });
-
-
+                //查询所在城市的所有的区县
+                $('#provinceId').change(function() {
+                    $('#areaId option:gt(0)').remove();//移除除第一行外的其他区县名
+                    //在省份改变时区县也初始化
+                });
+                $('#cityId').change(function() {
+                    var cityId = $('#cityId').val();
+                    $('#areaId option:gt(0)').remove();//移除除第一行外的其他区县名
+                    $.post(
+                        '<%=request.getContextPath()%>/ajax3?method=selectArea',
+                        {'cityId' : cityId},
+                        function (jsonObj) {
+                            console.log(jsonObj);
+                            $(jsonObj).each(function() {
+                                $('#areaId').append('<option value="'+this.id+'">'+this.area+'</option>');
+                            });
+                        },
+                        'json'
+                    );
+                });
 
 
 

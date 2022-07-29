@@ -26,9 +26,6 @@ public class Ajax3Servlet extends HttpServlet {
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         System.out.println("Ajax3Servlet.service");
         String method = req.getParameter("method");
-        if (method == null || method.equals("")) {
-            method = "selectProvince";
-        }
         switch (method) {
             case "selectProvince":
                 selectProvince(req, resp);
@@ -67,6 +64,8 @@ public class Ajax3Servlet extends HttpServlet {
         }
 
         resp.setContentType("text/html;charset=utf-8");
+
+        //下面这两句是重点
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.writeValue(resp.getWriter(), list);
     }
